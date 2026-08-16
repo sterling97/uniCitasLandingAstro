@@ -1,0 +1,5 @@
+# Configuración de pnpm (v11+).
+# allowBuilds: dependencias autorizadas a ejecutar sus scripts de instalación.
+# esbuild lo necesita para descargar/enlazar su binario (lo usa Astro).
+allowBuilds:
+  esbuild: true

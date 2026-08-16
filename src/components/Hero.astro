@@ -1,0 +1,21 @@
+---
+/* FORMATO — no editar para cambios de contenido (textos en content.ts). */
+import { content } from '../config/content';
+import ImageSlot from './ImageSlot.astro';
+---
+
+<section style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:28px clamp(24px,5vw,96px);align-items:center;padding:clamp(56px,8vw,112px) 0">
+  <div>
+    <h1 style="font-family:var(--font-heading);font-weight:800;font-size:clamp(42px,6vw,80px);line-height:1.02;letter-spacing:-0.02em;margin:0 0 0 -0.058em">
+      {content.hero.titleLines.map((line) => <span style="display:block">{line}</span>)}
+    </h1>
+    <p style="font-size:17px;line-height:28px;max-width:52ch;margin:28px 0 0;color:var(--color-neutral-800)">{content.hero.subtitle}</p>
+    <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:28px">
+      <a href={content.bookingUrl} class="btn btn-primary">{content.hero.primaryCtaLabel}</a>
+      <a href="#servicios" class="btn btn-ghost">{content.hero.secondaryCtaLabel}</a>
+    </div>
+  </div>
+  <figure class="grayscale" style="margin:0">
+    <ImageSlot image={content.hero.image} aspectRatio="4/5" />
+  </figure>
+</section>

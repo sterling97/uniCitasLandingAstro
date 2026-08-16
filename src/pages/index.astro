@@ -1,0 +1,39 @@
+---
+/* FORMATO — página principal: define el ORDEN de las secciones.
+   Todo el contenido (textos, imágenes, colores) vive en src/config/content.ts. */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import InfoBar from '../components/InfoBar.astro';
+import Services from '../components/Services.astro';
+import Gallery from '../components/Gallery.astro';
+import Team from '../components/Team.astro';
+import Quote from '../components/Quote.astro';
+import Schedule from '../components/Schedule.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base>
+  <div style="min-height:100vh;background:var(--color-bg)">
+    <Nav />
+
+    <div style="max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+      <Hero />
+      <div style="height:2px;background:var(--color-divider)"></div>
+      <InfoBar />
+      <div style="height:2px;background:var(--color-divider)"></div>
+      <Services />
+      <Gallery />
+      <div style="height:2px;background:var(--color-divider)"></div>
+      <Team />
+      <div style="height:2px;background:var(--color-divider)"></div>
+      <Quote />
+      <div style="height:2px;background:var(--color-divider)"></div>
+      <Schedule />
+    </div>
+
+    <CtaBanner />
+    <Footer />
+  </div>
+</Base>

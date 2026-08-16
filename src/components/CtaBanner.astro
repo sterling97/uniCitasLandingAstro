@@ -1,0 +1,13 @@
+---
+/* FORMATO — no editar para cambios de contenido (textos en content.ts). */
+import { content } from '../config/content';
+---
+
+<section style="background:var(--color-accent);color:var(--color-bg)">
+  <div style="max-width:1200px;margin:0 auto;padding:84px clamp(20px,5vw,72px)">
+    <h2 style="font-family:var(--font-heading);font-weight:800;font-size:clamp(34px,4.2vw,56px);line-height:1.06;letter-spacing:-0.015em;margin:0 0 0 -0.058em">{content.ctaBanner.title}</h2>
+    <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:42px">
+      <a href={content.bookingUrl} class="btn btn-ghost" style="color:var(--color-bg);border-color:var(--color-bg)">{content.ctaBanner.ctaLabel}</a>
+    </div>
+  </div>
+</section>

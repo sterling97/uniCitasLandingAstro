@@ -1,0 +1,24 @@
+---
+/* FORMATO — no editar para cambios de contenido.
+   Caja de imagen del sistema de diseño: muestra la foto si `image.src`
+   está definido en content.ts, o un marcador con texto si es null. */
+import type { ImageRef } from '../config/content';
+
+interface Props {
+  image: ImageRef;
+  /** Relación de aspecto CSS, p. ej. "4/5", "3/4", "1/1", "3/2". */
+  aspectRatio: string;
+}
+
+const { image, aspectRatio } = Astro.props;
+---
+
+<span class="image-slot" style={`aspect-ratio:${aspectRatio}`}>
+  {
+    image.src ? (
+      <img src={image.src} alt={image.alt} loading="lazy" />
+    ) : (
+      <span class="image-slot-placeholder">{image.placeholder}</span>
+    )
+  }
+</span>

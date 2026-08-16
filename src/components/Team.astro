@@ -1,0 +1,20 @@
+---
+/* FORMATO — no editar para cambios de contenido (miembros en content.ts). */
+import { content } from '../config/content';
+import ImageSlot from './ImageSlot.astro';
+---
+
+<section style="padding:56px 0">
+  <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:28px">{content.team.kicker}</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,42px)">
+    {content.team.members.map((member) => (
+      <div>
+        <figure class="grayscale" style="margin:0 0 14px">
+          <ImageSlot image={member.image} aspectRatio="1/1" />
+        </figure>
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:19px">{member.name}</div>
+        <div style="font-size:14px;color:var(--color-neutral-700)">{member.role}</div>
+      </div>
+    ))}
+  </div>
+</section>

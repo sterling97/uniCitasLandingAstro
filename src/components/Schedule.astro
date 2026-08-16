@@ -1,0 +1,37 @@
+---
+/* FORMATO — no editar para cambios de contenido (horarios en content.ts). */
+import { content } from '../config/content';
+import ImageSlot from './ImageSlot.astro';
+
+const { rows } = content.schedule;
+---
+
+<section id="horarios" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px clamp(24px,5vw,96px);padding:56px 0">
+  <div>
+    <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:28px">{content.schedule.kicker}</div>
+    <div style="display:flex;flex-direction:column">
+      {rows.map((row, i) => (
+        <div
+          style={`display:flex;justify-content:space-between;padding:12px 0;border-top:2px solid var(--color-divider)${i === rows.length - 1 ? ';border-bottom:2px solid var(--color-divider)' : ''};font-size:15px`}
+        >
+          <span style="font-weight:600">{row.days}</span>
+          {row.closed ? <span style="color:var(--color-neutral-600)">{row.hours}</span> : <span>{row.hours}</span>}
+        </div>
+      ))}
+    </div>
+  </div>
+  <div>
+    <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:28px">{content.location.kicker}</div>
+    <figure class="grayscale" style="margin:0 0 14px">
+      <ImageSlot image={content.location.image} aspectRatio="3/2" />
+    </figure>
+    <div style="font-size:15px;line-height:26px">
+      {content.location.lines.map((line, i) => (
+        <>
+          {i > 0 && <br />}
+          {line}
+        </>
+      ))}
+    </div>
+  </div>
+</section>

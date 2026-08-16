@@ -1,0 +1,25 @@
+---
+/* FORMATO — no editar para cambios de contenido (textos en content.ts). */
+import { content } from '../config/content';
+
+const { items } = content.services;
+---
+
+<section id="servicios" style="padding:56px 0">
+  <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:28px">{content.services.kicker}</div>
+  <div style="display:flex;flex-direction:column">
+    {items.map((service, i) => (
+      <div
+        style={`display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr) 90px 90px;gap:16px;align-items:baseline;padding:22px 0;border-top:2px solid var(--color-divider)${i === items.length - 1 ? ';border-bottom:2px solid var(--color-divider)' : ''}`}
+      >
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:22px;letter-spacing:-0.01em">{service.name}</div>
+        <div style="font-size:15px;color:var(--color-neutral-700)">{service.description}</div>
+        <div style="font-size:13px;letter-spacing:0.06em;color:var(--color-neutral-600)">{service.duration}</div>
+        <div style="font-family:var(--font-heading);font-weight:800;font-size:20px;text-align:right">{service.price}</div>
+      </div>
+    ))}
+  </div>
+  <div style="margin-top:28px">
+    <a href={content.bookingUrl} class="btn btn-secondary">{content.services.ctaLabel}</a>
+  </div>
+</section>

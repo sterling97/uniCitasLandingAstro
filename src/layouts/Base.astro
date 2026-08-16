@@ -1,0 +1,36 @@
+---
+/* FORMATO — layout base del landing. No editar para cambios de contenido.
+   El color de acento se lee de content.ts (brand.accentColor): si difiere
+   del acento por defecto del sistema de diseño, se recalcula la rama tonal
+   completa con color-mix, así un solo hex re-tematiza todo el landing. */
+import { content } from '../config/content';
+import '../styles/global.css';
+
+const DEFAULT_ACCENT = '#ec3013';
+const accent = content.brand.accentColor?.toLowerCase();
+
+const accentOverride =
+  accent && accent !== DEFAULT_ACCENT
+    ? [
+        `--color-accent:${accent}`,
+        `--color-accent-100:color-mix(in srgb, ${accent} 12%, #fff)`,
+        `--color-accent-600:color-mix(in srgb, ${accent} 88%, #000)`,
+        `--color-accent-700:color-mix(in srgb, ${accent} 70%, #000)`,
+        `--color-accent-800:color-mix(in srgb, ${accent} 55%, #000)`,
+      ].join(';')
+    : undefined;
+---
+
+<html lang={content.meta.lang} style={accentOverride}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{content.meta.title}</title>
+    <meta name="description" content={content.meta.description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

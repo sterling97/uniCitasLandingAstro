@@ -1,0 +1,16 @@
+---
+/* FORMATO — no editar para cambios de contenido (imágenes en content.ts). */
+import { content } from '../config/content';
+import ImageSlot from './ImageSlot.astro';
+---
+
+<section id="galeria" style="padding:28px 0 56px">
+  <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:28px">{content.gallery.kicker}</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+    {content.gallery.images.map((image) => (
+      <figure class="grayscale" style="margin:0">
+        <ImageSlot image={image} aspectRatio="3/4" />
+      </figure>
+    ))}
+  </div>
+</section>
