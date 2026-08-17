@@ -1,13 +1,20 @@
 ---
-/* FORMATO — no editar para cambios de contenido (textos en content.ts). */
+/* FORMATO — no editar para cambios de contenido.
+   Esta sección se alimenta de la API pública de servicios:
+     GET {PUBLIC_API_URL}/api/public/services
+   Las filas definidas en content.ts (services.items) se renderizan como
+   contenido inicial y de RESPALDO: si la API no responde o devuelve un
+   error, la sección se queda con ellas. Cuando la API contesta, el script
+   de abajo las sustituye por los servicios reales (solo IsActive). */
 import { content } from '../config/content';
 
 const { items } = content.services;
+const apiBase = import.meta.env.PUBLIC_API_URL ?? '';
 ---
 
-<section id="servicios" style="padding:56px 0">
+<section id="servicios" style="padding:56px 0" data-api-base={apiBase}>
   <div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:28px">{content.services.kicker}</div>
-  <div style="display:flex;flex-direction:column">
+  <div style="display:flex;flex-direction:column" data-services-list>
     {items.map((service, i) => (
       <div
         style={`display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr) 90px 90px;gap:16px;align-items:baseline;padding:22px 0;border-top:2px solid var(--color-divider)${i === items.length - 1 ? ';border-bottom:2px solid var(--color-divider)' : ''}`}
@@ -22,4 +29,71 @@ const { items } = content.services;
   <div style="margin-top:28px">
     <a href={content.bookingUrl} class="btn btn-secondary">{content.services.ctaLabel}</a>
   </div>
+
+  <template data-service-row-template>
+    <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr) 90px 90px;gap:16px;align-items:baseline;padding:22px 0;border-top:2px solid var(--color-divider)">
+      <div style="font-family:var(--font-heading);font-weight:700;font-size:22px;letter-spacing:-0.01em" data-slot="name"></div>
+      <div style="font-size:15px;color:var(--color-neutral-700)" data-slot="description"></div>
+      <div style="font-size:13px;letter-spacing:0.06em;color:var(--color-neutral-600)" data-slot="duration"></div>
+      <div style="font-family:var(--font-heading);font-weight:800;font-size:20px;text-align:right" data-slot="price"></div>
+    </div>
+  </template>
 </section>
+
+<script>
+  /* Respuesta esperada del backend:
+     { Succeeded: boolean, Data: [{ ServiceId, Name, Description,
+       DurationMinutes, Price, IsActive, CreatedAt }] } */
+  interface ApiService {
+    ServiceId: number;
+    Name: string;
+    Description: string;
+    DurationMinutes: number;
+    Price: string;
+    IsActive: boolean;
+  }
+
+  function formatPrice(price: string): string {
+    const n = Number.parseFloat(price);
+    if (Number.isNaN(n)) return price;
+    return '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  async function loadServices(): Promise<void> {
+    const section = document.getElementById('servicios');
+    if (!section) return;
+    const list = section.querySelector('[data-services-list]');
+    const template = section.querySelector<HTMLTemplateElement>('[data-service-row-template]');
+    if (!list || !template) return;
+
+    const base = (section as HTMLElement).dataset.apiBase ?? '';
+    if (!base) {
+      console.warn(
+        '[servicios] PUBLIC_API_URL no está definida (¿falta el archivo .env? ¿reiniciaste `pnpm dev` tras crearlo?). Se muestra el contenido de respaldo.'
+      );
+      return;
+    }
+    const response = await fetch(`${base}/api/public/services`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const json = await response.json();
+    if (!json?.Succeeded || !Array.isArray(json.Data)) throw new Error('Respuesta inesperada de la API');
+
+    const services: ApiService[] = json.Data.filter((s: ApiService) => s.IsActive);
+    if (services.length === 0) return; // sin servicios activos: conservar el respaldo
+
+    const rows = services.map((service) => {
+      const row = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      row.querySelector('[data-slot="name"]')!.textContent = service.Name;
+      row.querySelector('[data-slot="description"]')!.textContent = service.Description;
+      row.querySelector('[data-slot="duration"]')!.textContent = `${service.DurationMinutes} min`;
+      row.querySelector('[data-slot="price"]')!.textContent = formatPrice(service.Price);
+      return row;
+    });
+    rows[rows.length - 1]!.style.borderBottom = '2px solid var(--color-divider)';
+    list.replaceChildren(...rows);
+  }
+
+  loadServices().catch((err) => {
+    console.warn('[servicios] No se pudo cargar la API; se muestra el contenido de respaldo.', err);
+  });
+</script>

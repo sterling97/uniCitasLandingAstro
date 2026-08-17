@@ -67,7 +67,7 @@ tocan los archivos de formato.
 | `nav` | Enlaces de navegación + CTA | Los `href` (`#servicios`…) anclan a las secciones |
 | `hero` | Titular (una entrada por línea), subtítulo, CTAs, foto 4:5 | |
 | `infoBar` | 3 datos rápidos (hoy/dónde/teléfono) | Exactamente 3 para mantener la retícula |
-| `services` | Tabla de servicios y precios | `items[]`: cualquier cantidad de filas |
+| `services` | Tabla de servicios y precios | ⚡ Se alimenta de la API (ver abajo); `items[]` es el contenido inicial/de respaldo |
 | `gallery` | 4 fotos 3:4 | Exactamente 4 para mantener la retícula |
 | `team` | Miembros con foto 1:1 | 3 por fila queda óptimo |
 | `quote` | Testimonio destacado | Incluir comillas tipográficas “ ” en el texto |
@@ -75,6 +75,27 @@ tocan los archivos de formato.
 | `location` | Foto/mapa 3:2 + dirección | `lines[]`: una entrada por línea |
 | `ctaBanner` | Banner final a color | |
 | `footer` | Texto tras "© {año} {marca} · " | El año se calcula solo |
+
+## Servicios desde la API
+
+La sección **"Servicios y precios"** NO se mantiene a mano: en cada visita, un
+script en `Services.astro` consulta
+
+```
+GET {PUBLIC_API_URL}/api/public/services
+→ { Succeeded: true, Data: [{ ServiceId, Name, Description, DurationMinutes, Price, IsActive, CreatedAt }] }
+```
+
+filtra `IsActive: true`, formatea `DurationMinutes` como "N min" y `Price` como
+`$N` (locale es-MX), y sustituye las filas. Así, si el dueño edita sus
+servicios en la app, el landing se actualiza solo, sin redeploy.
+
+- `PUBLIC_API_URL` se configura en `.env` (copiar de `.env.example`). En
+  producción, apuntar al dominio del backend de esa empresa.
+- El backend debe permitir **CORS** (GET) desde el dominio del landing.
+- `services.items` en `content.ts` es el contenido inicial y de **respaldo**:
+  se muestra si la API falla o no responde. Mantenerlo razonablemente al día.
+- Al adaptar a una empresa nueva: cambiar `PUBLIC_API_URL`, no el componente.
 
 ## Imágenes: formatos y proporciones
 
@@ -108,6 +129,7 @@ pnpm preview     # probar el build
 - [ ] `brand.name` y `brand.accentColor`
 - [ ] `meta.title` y `meta.description` (SEO)
 - [ ] `bookingUrl` apuntando a la app de reservas de esa empresa
+- [ ] `PUBLIC_API_URL` en `.env` apuntando al backend de esa empresa (CORS habilitado)
 - [ ] Textos de todas las secciones (hero, servicios, horarios, quote…)
 - [ ] Imágenes en `public/images/` y sus rutas + `alt` en `content.ts`
 - [ ] `public/favicon.svg`: actualizar el `fill` al nuevo acento
