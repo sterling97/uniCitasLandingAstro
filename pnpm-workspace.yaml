@@ -1,5 +1,11 @@
 # Configuración de pnpm (v11+).
-# allowBuilds: dependencias autorizadas a ejecutar sus scripts de instalación.
-# esbuild lo necesita para descargar/enlazar su binario (lo usa Astro).
+# packages: obligatorio cuando existe este archivo. '.' = proyecto único (sin monorepo).
+packages:
+  - '.'
+
+# allowBuilds: mapa de dependencias autorizadas a ejecutar sus scripts de instalación.
+# En pnpm 11 sustituye a onlyBuiltDependencies/neverBuiltDependencies, y por defecto
+# strictDepBuilds=true hace que un script no aprobado FALLE la instalación.
+# esbuild lo necesita para enlazar su binario nativo (lo usa Astro).
 allowBuilds:
   esbuild: true
